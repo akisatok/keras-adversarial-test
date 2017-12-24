@@ -1,4 +1,6 @@
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 import math, json, sys
 import numpy as np
 from tqdm import tqdm
@@ -8,12 +10,21 @@ import matplotlib.pyplot as plt
 
 import tensorflow as tf
 from keras.backend import tensorflow_backend
-from keras.datasets import cifar10, mnist
+from keras.datasets import mnist
 from keras.models import Model
-from keras.layers import Input, Dense, Conv2D, Conv2DTranspose, Flatten, Reshape, BatchNormalization, PReLU, Activation
+from keras.layers import Input
+from keras.layers import Dense
+from keras.layers import Conv2D
+from keras.layers import Conv2DTranspose
+from keras.layers import Flatten
+from keras.layers import Reshape
+from keras.layers import BatchNormalization
+from keras.layers import PReLU
+from keras.layers import Activation
 from keras.optimizers import Adam
-from keras.losses import binary_crossentropy, categorical_crossentropy, mean_squared_error
-from keras.metrics import binary_accuracy, categorical_accuracy
+from keras.losses import categorical_crossentropy
+from keras.losses import mean_squared_error
+from keras.metrics import categorical_accuracy
 from keras.utils import plot_model
 from keras.utils.np_utils import to_categorical
 from keras.initializers import RandomNormal
@@ -106,10 +117,10 @@ def GAN(input_dim):
     __z  = Input(shape=(input_dim,))
     __xt = Input(shape=(28, 28, 1))
     # generator
-    gen = generator(input_dim)  # instance of the generator function
+    gen = generator(input_dim)
     __xs = gen(__z)
     # discriminator
-    dis = discriminator()  # instance of the discriminator function
+    dis = discriminator()
     __yt = dis(__xt)
     __ys = dis(__xs)
     # generator training stage
@@ -150,15 +161,12 @@ if __name__ == "__main__":
     img_width = 28
     img_height = 28
     input_dim = 100
-    max_epoch = 10000
+    max_epoch = 101
     batch_size = 100
 
     # load the MNIST dataset
     print('Loading the dataset...')
-#    (X_train_orig, _), (X_test_orig, _) = cifar10.load_data()
     (X_train_orig, _), (X_test_orig, _) = mnist.load_data()
-#    X_train = (X_train_orig.astype(np.float32) - 128.0) / 128.0
-#    X_test  = (X_test_orig .astype(np.float32) - 128.0) / 128.0
     X_train = (X_train_orig.astype(np.float32)[:,:,:,np.newaxis] - 128.0) / 128.0
     X_test  = (X_test_orig .astype(np.float32)[:,:,:,np.newaxis] - 128.0) / 128.0
     n_samples_train = X_train.shape[0]
@@ -243,12 +251,11 @@ if __name__ == "__main__":
             # display
             for n in range(n_samples_sim):
                 plt.subplot(sim_x, sim_y, n+1)
-#                plt.imshow(X_sim[n])
                 plt.imshow(X_sim[n].squeeze())
                 plt.gray()
                 plt.tick_params(labelbottom="off", bottom="off", labelleft="off",left="off")
             seed_zfill = str(epoch).zfill(5)
-            plt.savefig('generated_images_{0}.png'.format(seed_zfill))
+            plt.savefig('MNIST/generated_images_{0}.png'.format(seed_zfill))
 
     # end for epoch in tqdm(range(max_epoch))
 
